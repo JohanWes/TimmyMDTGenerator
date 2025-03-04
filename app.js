@@ -7,6 +7,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     const resultsTextarea = document.getElementById('results');
     const authStatus = document.getElementById('auth-status');
     const dbStatus = document.getElementById('db-status');
+    const resultsPopup = document.getElementById('results-popup');
+    const popupResults = document.getElementById('popup-results');
+    const closePopupBtn = document.querySelector('.close-popup');
+    
+    // Popup functions
+    function showPopup(content) {
+        popupResults.innerHTML = content;
+        resultsPopup.classList.add('active');
+    }
+    
+    function hidePopup() {
+        resultsPopup.classList.remove('active');
+        // Wait for the transition to complete before removing content
+        setTimeout(() => {
+            if (!resultsPopup.classList.contains('active')) {
+                popupResults.innerHTML = '';
+            }
+        }, 300);
+    }
+    
+    // Close popup when clicking the close button
+    closePopupBtn.addEventListener('click', hidePopup);
+    
+    // Close popup when clicking outside the popup content
+    resultsPopup.addEventListener('click', (event) => {
+        if (event.target === resultsPopup) {
+            hidePopup();
+        }
+    });
     
     // Create a reset database button
     const dbStatusContainer = dbStatus.parentElement;
@@ -135,7 +164,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const gotToken = await window.auth.initializeAuthentication();
                 
                 if (!gotToken) {
-                    resultsTextarea.value = 'Authentication failed. Please contact the administrator.';
+                    const errorMessage = 'Authentication failed. Please contact the administrator.';
+                    resultsTextarea.value = errorMessage;
+                    
+                    // Show error in popup
+                    showPopup(`<span class="popup-error">${errorMessage}</span>`);
+                    
+                    // Set a timer to automatically close the popup after 5 seconds
+                    setTimeout(hidePopup, 5000);
                     return;
                 }
             }
@@ -143,7 +179,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Get URL from input
             const url = logUrlInput.value.trim();
             if (!url) {
-                resultsTextarea.value = 'Please enter a Warcraft Logs URL.';
+                const errorMessage = 'Please enter a Warcraft Logs URL.';
+                resultsTextarea.value = errorMessage;
+                
+                // Show error in popup
+                showPopup(`<span class="popup-error">${errorMessage}</span>`);
+                
+                // Set a timer to automatically close the popup after 5 seconds
+                setTimeout(hidePopup, 5000);
                 return;
             }
             
@@ -151,16 +194,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { reportCode, fightId } = window.api.parseWarcraftLogsUrl(url);
             
             if (!reportCode) {
-                resultsTextarea.value = 'Invalid Warcraft Logs URL. Please enter a valid report URL.\n\n' +
+                const errorMessage = 'Invalid Warcraft Logs URL. Please enter a valid report URL.\n\n' +
                     'Example URL formats:\n' +
                     '- https://www.warcraftlogs.com/reports/AbCdEfGh1234\n' +
                     '- https://www.warcraftlogs.com/reports/AbCdEfGh1234#fight=3';
+                
+                resultsTextarea.value = errorMessage;
+                
+                // Show error in popup
+                showPopup(`<span class="popup-error">${errorMessage}</span>`);
+                
+                // Set a timer to automatically close the popup after 5 seconds
+                setTimeout(hidePopup, 5000);
                 return;
             }
             
             // Show loading message with report code
-            resultsTextarea.value = `Fetching data for report ${reportCode}...\n` +
+            const loadingMessage = `Fetching data for report ${reportCode}...\n` +
                 (fightId ? `Fight ID: ${fightId}\nThis may take a moment if there are multiple pages of data...` : 'No fight ID specified, will list available fights');
+            
+            resultsTextarea.value = loadingMessage;
+            
+            // Show popup with loading message
+            showPopup(`<span class="popup-progress">${loadingMessage}</span>`);
             
             // If no fight ID specified, fetch fights and show them
             if (!fightId) {
@@ -181,7 +237,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         fightList += 'No fights found in this report.';
                     }
                     
+                    // Update the textarea
                     resultsTextarea.value = fightList;
+                    
+                    // Show the fight list in the popup
+                    showPopup(`<span class="popup-success">${fightList}</span>`);
+                    
+                    // Set a timer to automatically close the popup after 8 seconds
+                    setTimeout(hidePopup, 8000);
                 } catch (error) {
                     handleApiError(error);
                 }
@@ -196,10 +259,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 // Set up a progress update function
                 const updateProgress = (page, pageEvents, total) => {
-                    resultsTextarea.value = `Fetching data for report ${reportCode}...\n` +
+                    const progressMessage = `Fetching data for report ${reportCode}...\n` +
                         `Fight ID: ${fightId}\n` +
                         `Retrieving page ${page} of cast data...\n` +
                         `Retrieved ${total} events so far`;
+                    
+                    // Update the textarea
+                    resultsTextarea.value = progressMessage;
+                    
+                    // Update the popup
+                    showPopup(`<span class="popup-progress">${progressMessage}</span>`);
                 };
                 
                 // Add event listener for console logs to update progress
@@ -228,10 +297,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                             if (finalMatch) {
                                 const pages = parseInt(finalMatch[1], 10);
                                 const events = parseInt(finalMatch[2], 10);
-                                resultsTextarea.value = `Fetching data for report ${reportCode}...\n` +
+                                const completionMessage = `Fetching data for report ${reportCode}...\n` +
                                     `Fight ID: ${fightId}\n` +
                                     `Completed! Retrieved ${events} events from ${pages} pages.\n` +
                                     `Formatting results...`;
+                                
+                                // Update the textarea
+                                resultsTextarea.value = completionMessage;
+                                
+                                // Update the popup
+                                showPopup(`<span class="popup-progress">${completionMessage}</span>`);
                             }
                         }
                     }
@@ -242,7 +317,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const castData = await window.api.fetchCastData(reportCode, fightId);
                     
                     // Format and display the cast data
-                    resultsTextarea.value = await window.api.formatCastData(castData);
+                    const formattedData = await window.api.formatCastData(castData);
+                    resultsTextarea.value = formattedData;
+                    
+                    // Show the formatted data in the popup
+                    showPopup(`<span class="popup-success">${formattedData}</span>`);
+                    
+                    // Set a timer to automatically close the popup after 8 seconds
+                    setTimeout(hidePopup, 8000);
                     
                     // Automatically convert to MDT note
                     await convertToMRTNote();
@@ -282,7 +364,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Please try again later.';
         }
         
+        // Update the results textarea
         resultsTextarea.value = errorMessage;
+        
+        // Show error in popup
+        showPopup(`<span class="popup-error">${errorMessage}</span>`);
+        
+        // Set a timer to automatically close the popup after 8 seconds
+        setTimeout(hidePopup, 8000);
     }
     
     // Helper function to format time in MM:SS format
