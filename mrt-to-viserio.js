@@ -345,6 +345,15 @@ const spellInfo = {
         spec: 'Preservation',
         duration: 5,
         class: 'Evoker'
+    },
+    '374227': {
+        name: 'Zephyr',
+        wowheadLink: 'https://www.wowhead.com/spell=374227/zephyr',
+        iconLink: '/viserio-cooldowns/images/evoker/374227.jpg',
+        playerSpellType: 'Group DR',
+        spec: 'Augmentation',
+        duration: 8,
+        class: 'Evoker'
     }
 };
 

@@ -780,7 +780,14 @@ const spellIdToClass = {
     '196718': 'Demon Hunter',
     
     // Death Knight
-    '51052': 'Death Knight'
+    '51052': 'Death Knight',
+    
+    // Evoker (Preservation/Augmentation)
+    '363534': 'Evoker', // Rewind
+    '359816': 'Evoker', // Dream Flight
+    '370537': 'Evoker', // Stasis
+    '370984': 'Evoker', // Emerald Communion
+    '374227': 'Evoker'  // Zephyr
 };
 
 // Initialize MRT note conversion UI
