@@ -1,14 +1,22 @@
 FROM node:18-alpine
 
+# Add build argument for cache busting
+ARG CACHE_BUST=1
+RUN echo "Cache bust: ${CACHE_BUST}"
+
+# Install git
+RUN apk add --no-cache git
+
 # Create app directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install
+# Clone the repository (this will happen at build time)
+RUN git clone https://github.com/JohanWes/TimmyMDTGenerator.git /tmp/repo && \
+    cp -R /tmp/repo/* /app/ && \
+    rm -rf /tmp/repo
 
-# Copy application code
-COPY . .
+# Install dependencies
+RUN npm install
 
 # Create data directory
 RUN mkdir -p /app/data
