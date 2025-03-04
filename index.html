@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timtommy MDT generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Timtommy MDT generator</h1>
+        
+        <div class="input-section">
+            <input type="text" id="log-url" placeholder="Enter Warcraft Logs URL...">
+            <button id="fetch-button">Generate MDT</button>
+        </div>
+        
+        <div class="auth-section">
+            <div class="auth-status" id="auth-status">Checking authentication...</div>
+        </div>
+        
+        <div class="filter-section">
+            <h2>Spell ID Filter</h2>
+            <div class="filter-status">
+                Database Status: <span id="db-status">Initializing...</span>
+            </div>
+            <div class="filter-controls">
+                <div class="input-group">
+                    <input type="text" id="spell-id-input" placeholder="Enter Spell ID...">
+                    <input type="text" id="spell-name-input" placeholder="Enter Spell Name...">
+                </div>
+                <div class="button-group">
+                    <button id="add-spell-id">Add</button>
+                    <button id="clear-filter">Clear All</button>
+                </div>
+            </div>
+            <div class="filter-backup">
+                <button id="export-filter">Export Filter</button>
+                <button id="import-filter">Import Filter</button>
+            </div>
+            <div class="filter-toggle">
+                <label>
+                    <input type="checkbox" id="filter-enabled" checked> Enable Filtering
+                </label>
+            </div>
+            <div class="filter-list">
+                <h3>Current Filter</h3>
+                <ul id="spell-id-list"></ul>
+            </div>
+        </div>
+        
+        <div class="class-mapping-section">
+            <h2>Class Name Mappings</h2>
+            <p class="section-description">Map generic class names to specific player names for MRT notes</p>
+            
+            <div class="mapping-controls">
+                <div class="input-group">
+                    <select id="class-select">
+                        <option value="" disabled selected>Select Class</option>
+                        <option value="Priest">Priest</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Monk">Monk</option>
+                        <option value="Shaman">Shaman</option>
+                        <option value="Warrior">Warrior</option>
+                        <option value="Demon Hunter">Demon Hunter</option>
+                        <option value="Death Knight">Death Knight</option>
+                        <option value="Mage">Mage</option>
+                        <option value="Warlock">Warlock</option>
+                        <option value="Hunter">Hunter</option>
+                        <option value="Rogue">Rogue</option>
+                    </select>
+                    <input type="text" id="player-name-input" placeholder="Enter Player Name...">
+                </div>
+                <div class="button-group">
+                    <button id="add-class-mapping">Add/Update</button>
+                    <button id="clear-mappings">Clear All</button>
+                </div>
+            </div>
+            
+            <div class="mapping-backup">
+                <button id="export-mappings">Export Mappings</button>
+                <button id="import-mappings">Import Mappings</button>
+            </div>
+            
+            <div class="mapping-list">
+                <h3>Current Mappings</h3>
+                <ul id="class-mapping-list"></ul>
+            </div>
+        </div>
+    
+        <div class="results-section">
+            <h2>Cast Results</h2>
+            <textarea id="results" readonly></textarea>
+        </div>
+        
+        <div class="mrt-section">
+            <h2>MRT Note Format</h2>
+            <div class="mrt-controls">
+                <button id="convert-button">Convert to MRT</button>
+                <button id="copy-button">Copy to Clipboard</button>
+            </div>
+            <textarea id="mrt-notes"></textarea>
+        </div>
+        
+        <div class="viserio-section">
+            <h2>Viserio Format</h2>
+            <div class="viserio-controls">
+                <button id="convert-to-viserio-button">Convert to Viserio</button>
+                <button id="copy-viserio-button">Copy to Clipboard</button>
+            </div>
+            <textarea id="viserio-output" readonly></textarea>
+        </div>
+    </div>
+    
+    <script src="db.js"></script>
+    <script src="db-client.js"></script>
+    <script src="db-factory.js"></script>
+    <script src="auth.js"></script>
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

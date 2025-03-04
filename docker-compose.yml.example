@@ -1,0 +1,23 @@
+version: '3'
+
+networks:
+  proxynet:
+    name: proxynet
+    external: true
+
+services:
+  loganalyzer:
+    build: .
+    image: loganalyzer
+    container_name: loganalyzer
+    restart: unless-stopped
+    environment:
+      - PORT=8005
+      - PUBLIC_IP=${PUBLIC_IP:-your-domain.com/loganalyzer}
+      - WARCRAFT_LOGS_TOKEN=${WARCRAFT_LOGS_TOKEN:-}
+      - BASE_PATH=/loganalyzer
+      - DB_MODE=shared
+    volumes:
+      - /path/to/your/data:/app/data
+    networks:
+      - proxynet

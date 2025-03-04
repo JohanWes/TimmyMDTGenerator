@@ -1,0 +1,24 @@
+{
+  "name": "warcraft-logs-cast-analyzer",
+  "version": "1.0.0",
+  "description": "A web application that analyzes Warcraft Logs and outputs important casts done in a fight by friendly players",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "setup-and-start": "node setup-and-start.js",
+    "start-background": "node start-background.js",
+    "stop-background": "node stop-background.js",
+    "check-ip": "node check-ip.js",
+    "check-server": "node check-server.js",
+    "setup-firewall": "node setup-firewall.js",
+    "test-connection": "node test-connection.js",
+    "update-ip": "node update-ip.js",
+    "setup-windows-service": "node setup-windows-service.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "msgpack-lite": "^0.1.26",
+    "warcraft-logs-cast-analyzer": "file:"
+  }
+}
